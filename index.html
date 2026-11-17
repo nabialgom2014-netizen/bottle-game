@@ -3,85 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Royal Bottle - لعبتنا الأصلية 50 مستوى</title>
+<title>Royal Bottle 👑</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:Arial;background:linear-gradient(#1a1a2e,#16213e);color:#fff;text-align:center;overflow:hidden;user-select:none}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:rgba(0,0,0,.3)}
-header b{font-size:18px} header span{background:gold;color:#000;padding:5px 12px;border-radius:20px;font-weight:bold}
-#room{height:58vh;position:relative;background:linear-gradient(#2b3a55,#1a1a2e);border-bottom:8px solid #8b5a2b;overflow:hidden;margin:10px;border-radius:15px}
-#room.wind{background:linear-gradient(#3a4a6a,#2a3a55)}
-#window{position:absolute;top:10px;left:10px;width:110px;height:90px;background:#87CEEB;border:4px solid #fff;border-radius:8px;display:none}
-#window:before{content:"☁️ 🌬️";position:absolute;top:25px;left:10px;font-size:28px}
-#leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:none;font-size:22px}
-#table{position:absolute;bottom:0;left:0;width:100%;height:18px;background:#8b5a2b}
-#bottle{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:85px;transition:bottom .7s cubic-bezier(.2,.8,.3,1.2),left .7s,transform .7s;filter:drop-shadow(0 10px 10px rgba(0,0,0,.5))}
-#bottle.fly{bottom:65%;left:55%}
-#powerWrap{width:85%;height:18px;background:#333;border-radius:10px;margin:12px auto;overflow:hidden;border:2px solid gold}
-#power{height:100%;width:0%;background:linear-gradient(90deg,green,yellow,red)}
-#msg{font-size:20px;min-height:30px;font-weight:bold;color:gold}
-#btn{width:85%;padding:18px;background:gold;color:#000;border:none;border-radius:15px;font-size:22px;font-weight:bold;cursor:pointer;touch-action:none}
-#btn:active{transform:scale(.97)}
-#stars{font-size:28px;margin:5px}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 15px}
+header b{font-size:19px} header span{background:gold;color:#000;padding:6px 13px;border-radius:20px;font-weight:bold;font-size:14px}
+#room{height:52vh;position:relative;background:linear-gradient(#2b3a55,#1a2a4a);margin:0 10px;border-radius:18px;overflow:hidden;border:2px solid #c9a227}
+#window{position:absolute;top:12px;left:12px;width:110px;height:95px;background:#87CEEB;border:4px solid #fff;border-radius:10px;overflow:hidden}
+#window:before{content:"☀️";position:absolute;font-size:28px;top:8px;left:10px}
+#leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;font-size:22px}
+#leaves span{position:absolute;animation:fall 3s infinite linear}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(180px) rotate(360deg);opacity:0}}
+#table{position:absolute;bottom:0;left:0;width:100%;height:38px;background:linear-gradient(#8b5a2b,#5a3a1a);border-top:4px solid #a67c3a}
+#bottle{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);width:95px;transition:bottom .7s cubic-bezier(.2,.8,.3,1.2),left .7s,transform .7s}
+#bottle img{width:100%;filter:drop-shadow(0 10px 10px rgba(0,0,0,.5))}
+#msg{font-size:21px;font-weight:bold;min-height:30px;margin:10px 0 4px}
+#powerWrap{width:85%;height:18px;background:#333;margin:10px auto;border-radius:10px;overflow:hidden;border:1px solid #555}
+#power{height:100%;width:0%;background:linear-gradient(90deg,#2ecc71,#f1c40f,#e74c3c)}
+#btn{width:85%;padding:18px;background:linear-gradient(gold,#f1c40f);color:#000;border:none;border-radius:15px;font-size:21px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 #a67c00}
+#btn:active{transform:translateY(3px);box-shadow:none}
 #levels{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;padding:8px;max-height:120px;overflow-y:auto}
-.lv{width:32px;height:32px;border-radius:50%;background:#444;border:1px solid #777;font-size:13px;color:#fff;cursor:pointer}
-.lv.done{background:green} .lv.now{background:gold;color:#000;font-weight:bold}
+.lv{width:32px;height:32px;border-radius:50%;background:#444;color:#fff;border:1px solid #777;font-size:13px}
+.lv.done{background:#27ae60} .lv.now{background:gold;color:#000;font-weight:bold}
 </style>
 </head>
 <body>
 <header><b>👑 Royal Bottle</b><span id="levelTxt">مستوى 1 / 50</span></header>
-<div id="room">
-<div id="window"></div><div id="leaves">🍂 🍃 🍂 🍃</div>
-<div id="bottle">🍶</div><div id="table"></div>
-</div>
-<div id="stars">⭐⭐⭐</div>
-<div id="msg">اضغط مطولاً لتشحن القوة، واترك لتطير القارورة!</div>
+<div id="room"><div id="window"></div><div id="leaves"><span style="left:10%">🍂</span><span style="left:50%;animation-delay:.8s">🍁</span><span style="left:80%;animation-delay:1.5s">🍂</span></div><div id="bottle"><img src="bottle8.png" id="bottleImg"></div><div id="table"></div></div>
+<div id="msg">اضغط مطولاً واترك! 🎯</div>
 <div id="powerWrap"><div id="power"></div></div>
-<button id="btn">اضغط مطولاً - اشحن واترك</button>
+<button id="btn">اضغط مطولاً - اشحن واترك 🚀</button>
 <div id="levels"></div>
 <script>
-let level=parseInt(localStorage.getItem('royal_level')||'1');
-let done=JSON.parse(localStorage.getItem('royal_done')||'[]');
-let power=0, charging=false, interval=null;
-const bottles=['🍶','🥛','🧴','🍾','🥤','🍷','🫙','🥂','🍸','🧋'];
-const btn=document.getElementById('btn'), bottle=document.getElementById('bottle'), powerEl=document.getElementById('power'), msg=document.getElementById('msg'), room=document.getElementById('room'), winEl=document.getElementById('window'), leaves=document.getElementById('leaves');
-function render(){
- document.getElementById('levelTxt').textContent='مستوى '+level+' / 50';
- let b=bottles[Math.floor((level-1)/10)%bottles.length];
- if(level===50) b='🏆';
- bottle.textContent=b;
- let isWind=level>=40;
- room.classList.toggle('wind',isWind);
- winEl.style.display=isWind?'block':'none';
- leaves.style.display=isWind?'block':'none';
- if(isWind) msg.textContent='⚠️ مستوى '+level+' - رياح قوية! نافذة مفتوحة، ركز!';
- else msg.textContent='مستوى '+level+' - اضغط مطولاً واترك!';
- let lvBox=document.getElementById('levels'); lvBox.innerHTML='';
- for(let i=1;i<=50;i++){let d=document.createElement('button');d.className='lv'+(done.includes(i)?' done':'')+(i===level?' now':'');d.textContent=i;d.onclick=()=>{level=i;render();};lvBox.appendChild(d);}
-}
-function start(e){e.preventDefault();charging=true;power=0;powerEl.style.width='0%';interval=setInterval(()=>{power+=2.2;if(power>=100)power=100;powerEl.style.width=power+'%';},20);}
-function end(e){e.preventDefault();if(!charging)return;charging=false;clearInterval(interval);
- let need=45+level*0.6; let windEffect=level>=40?(Math.random()*18-9):0;
- let diff=Math.abs(power+windEffect-need);
- bottle.classList.add('fly'); bottle.style.transform='translateX(-50%) rotate('+(360+level*20)+'deg)';
- setTimeout(()=>{
-   bottle.classList.remove('fly'); bottle.style.transform='translateX(-50%) rotate(0deg)';
-   if(diff<18){
-     let tries=diff<6?3:diff<12?2:1;
-     document.getElementById('stars').textContent='⭐'.repeat(tries)+' - أحسنت!';
-     msg.textContent='🎉 فزت! مستوى '+level+' اكتمل';
-     if(!done.includes(level)){done.push(level);localStorage.setItem('royal_done',JSON.stringify(done));}
-     setTimeout(()=>{if(level<50){level++;localStorage.setItem('royal_level',level);render();}else{msg.textContent='👑🏆 بطل! خلصت 50 مستوى! أنت أسطورة!';}},1200);
-   } else {
-     document.getElementById('stars').textContent='💔 حاول مرة ثانية';
-     msg.textContent=power<need?'القوة ضعيفة، اشحن أكثر!':'القوة قوية زيادة، خفف شوي!';
-   }
-   powerEl.style.width='0%';
- },750);
-}
-btn.addEventListener('touchstart',start); btn.addEventListener('touchend',end);
-btn.addEventListener('mousedown',start); btn.addEventListener('mouseup',end);
-render();
+let level=1, done=[], power=0, charging=false, interval=null;
+let btn=document.getElementById('btn'), bottle=document.getElementById('bottle'), bottleImg=document.getElementById('bottleImg'), powerEl=document.getElementById('power'), msg=document.getElementById('msg');
+function render(){document.getElementById('levelTxt').textContent='مستوى '+level+' / 50'; let box=document.getElementById('levels'); box.innerHTML=''; for(let i=1;i<=50;i++){let b=document.createElement('button'); b.className='lv'+(done.includes(i)?' done':'')+(i===level?' now':''); b.textContent=i; b.onclick=()=>{level=i;render();}; box.appendChild(b);} }
+function start(e){e.preventDefault(); charging=true; power=0; interval=setInterval(()=>{power+=1.5; if(power>100)power=100; powerEl.style.width=power+'%';},18);}
+function end(e){e.preventDefault(); if(!charging)return; charging=false; clearInterval(interval); let need=42+level*0.7; let diff=Math.abs(power-need); bottle.style.bottom='62%'; bottle.style.transform='translateX(-50%) rotate(360deg)'; setTimeout(()=>{bottle.style.bottom='38px'; bottle.style.transform='translateX(-50%) rotate(0deg)'; if(diff<17){msg.textContent='🎉 ممتاز! فزت مستوى '+level; bottleImg.src='bottle9.png'; if(!done.includes(level))done.push(level); setTimeout(()=>{bottleImg.src='bottle8.png'; if(level<50){level++;render();}else{msg.textContent='👑 بطل! خلصت 50 مستوى!';}},900);} else if(power<need){msg.textContent='💔 ضعيفة، اشحن أكثر!'; bottleImg.src='broken.png'; setTimeout(()=>bottleImg.src='bottle8.png',800);} else {msg.textContent='⚡ قوية زيادة، خفف شوي!';} powerEl.style.width='0%';},700);}
+btn.addEventListener('touchstart',start); btn.addEventListener('touchend',end); btn.addEventListener('mousedown',start); btn.addEventListener('mouseup',end); render();
 </script>
 </body>
 </html>
