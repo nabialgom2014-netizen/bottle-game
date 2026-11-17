@@ -3,187 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Royal Bottle Challenge - التحدي الملكي</title>
+<title>Royal Bottle - لعبتنا الأصلية 50 مستوى</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#0b0b2a;color:#fff;font-family:Arial,sans-serif;overflow:hidden;user-select:none}
-#app{max-width:480px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:linear-gradient(#1a1a4a,#0b0b2a)}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,.35)}
-header b{font-size:15px}
-#nameInput{width:100%;padding:12px;border-radius:12px;border:2px solid gold;font-size:16px;text-align:center}
-.btn{background:gold;color:#000;border:0;padding:12px 16px;border-radius:12px;font-weight:900;cursor:pointer;font-size:16px}
-.btn2{background:#222;color:#fff;border:1px solid #555;padding:10px;border-radius:10px;cursor:pointer}
-#levels{padding:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;overflow:auto}
-.lvl{background:#222;border:2px solid #444;border-radius:12px;padding:10px 0;text-align:center;cursor:pointer}
-.lvl.locked{opacity:.4}
-.lvl .stars{font-size:11px;color:gold;min-height:14px}
-#game{display:none;flex-direction:column;flex:1}
-#topBar{display:flex;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,.4);font-size:13px}
-#scene{position:relative;flex:1;overflow:hidden;background:linear-gradient(#2b2b6b,#1a1a3a 60%,#3a2a1a 60%,#2a1e12)}
-#scene.wind{background:linear-gradient(#3a6a8a,#2a4a6a 60%,#3a2a1a 60%,#2a1e12)}
-#window{position:absolute;top:8%;left:8%;width:110px;height:90px;background:#87CEEB;border:5px solid #fff;display:none;border-radius:6px}
-#scene.wind #window{display:block}
-.leaf{position:absolute;font-size:20px;animation:leafFly 3s linear infinite}
-@keyframes leafFly{from{transform:translate(0,0) rotate(0)}to{transform:translate(-180px,80px) rotate(360deg)}}
-#table{position:absolute;bottom:18%;height:14px;background:#8B4513;border-radius:4px;border-top:3px solid #D2691E}
-#floor{position:absolute;bottom:0;left:0;right:0;height:18%;background:#1a120a;border-top:2px solid #333}
-#hand{position:absolute;bottom:18%;font-size:52px;z-index:5;transition:.15s}
-#bottle{position:absolute;bottom:calc(18% + 14px);width:34px;height:74px;z-index:6;transition:none;transform-origin:50% 50%;display:flex;align-items:center;justify-content:center;font-size:34px}
-#powerWrap{padding:10px 12px;background:rgba(0,0,0,.5)}
-#powerBar{height:18px;background:#333;border-radius:10px;overflow:hidden;border:1px solid gold}
-#powerFill{height:100%;width:0%;background:linear-gradient(90deg,green,yellow,red)}
-#msg{text-align:center;min-height:22px;font-weight:900;color:gold;padding:4px}
-#holdBtn{margin:10px 12px;padding:18px;background:gold;color:#000;border:0;border-radius:16px;font-size:19px;font-weight:900;touch-action:none}
-#holdBtn:active{background:#ffcc00}
-#starsRow{text-align:center;font-size:22px;color:gold}
-.reward{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:99}
-.reward>div{background:#1a1a4a;border:2px solid gold;border-radius:18px;padding:24px;text-align:center;max-width:320px}
+body{margin:0;font-family:Arial;background:linear-gradient(#1a1a2e,#16213e);color:#fff;text-align:center;overflow:hidden;user-select:none}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:rgba(0,0,0,.3)}
+header b{font-size:18px} header span{background:gold;color:#000;padding:5px 12px;border-radius:20px;font-weight:bold}
+#room{height:58vh;position:relative;background:linear-gradient(#2b3a55,#1a1a2e);border-bottom:8px solid #8b5a2b;overflow:hidden;margin:10px;border-radius:15px}
+#room.wind{background:linear-gradient(#3a4a6a,#2a3a55)}
+#window{position:absolute;top:10px;left:10px;width:110px;height:90px;background:#87CEEB;border:4px solid #fff;border-radius:8px;display:none}
+#window:before{content:"☁️ 🌬️";position:absolute;top:25px;left:10px;font-size:28px}
+#leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:none;font-size:22px}
+#table{position:absolute;bottom:0;left:0;width:100%;height:18px;background:#8b5a2b}
+#bottle{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:85px;transition:bottom .7s cubic-bezier(.2,.8,.3,1.2),left .7s,transform .7s;filter:drop-shadow(0 10px 10px rgba(0,0,0,.5))}
+#bottle.fly{bottom:65%;left:55%}
+#powerWrap{width:85%;height:18px;background:#333;border-radius:10px;margin:12px auto;overflow:hidden;border:2px solid gold}
+#power{height:100%;width:0%;background:linear-gradient(90deg,green,yellow,red)}
+#msg{font-size:20px;min-height:30px;font-weight:bold;color:gold}
+#btn{width:85%;padding:18px;background:gold;color:#000;border:none;border-radius:15px;font-size:22px;font-weight:bold;cursor:pointer;touch-action:none}
+#btn:active{transform:scale(.97)}
+#stars{font-size:28px;margin:5px}
+#levels{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;padding:8px;max-height:120px;overflow-y:auto}
+.lv{width:32px;height:32px;border-radius:50%;background:#444;border:1px solid #777;font-size:13px;color:#fff;cursor:pointer}
+.lv.done{background:green} .lv.now{background:gold;color:#000;font-weight:bold}
 </style>
 </head>
 <body>
-<div id="app">
-<header><span>👑 Royal Bottle</span><span id="playerLabel"></span></header>
-
-<div id="home">
-<div style="padding:14px;text-align:center">
-<h2 style="margin:4px">🍾 التحدي الملكي<br><small style="font-size:13px;color:gold">Bottle Flip - 50 مستوى</small></h2>
-<p style="font-size:13px;color:#ccc">اضغط مطولاً لشحن القوة • اترك لتقلب القارورة • أنزلها واقفة على الطاولة</p>
-<input id="nameInput" placeholder="اكتب اسمك يا بطل...">
-<div style="margin-top:10px"><button class="btn" onclick="saveName()">ابدأ اللعب ▶️</button></div>
-<p id="skinInfo" style="font-size:13px;color:gold"></p>
+<header><b>👑 Royal Bottle</b><span id="levelTxt">مستوى 1 / 50</span></header>
+<div id="room">
+<div id="window"></div><div id="leaves">🍂 🍃 🍂 🍃</div>
+<div id="bottle">🍶</div><div id="table"></div>
 </div>
+<div id="stars">⭐⭐⭐</div>
+<div id="msg">اضغط مطولاً لتشحن القوة، واترك لتطير القارورة!</div>
+<div id="powerWrap"><div id="power"></div></div>
+<button id="btn">اضغط مطولاً - اشحن واترك</button>
 <div id="levels"></div>
-</div>
-
-<div id="game">
-<div id="topBar"><span id="lvlLabel"></span><span id="attemptLabel"></span><span id="windLabel"></span></div>
-<div id="scene">
-<div id="window">🪟</div>
-<div id="table"></div>
-<div id="floor"></div>
-<div id="hand" style="left:18%">✋</div>
-<div id="bottle">🍾</div>
-</div>
-<div id="msg">اضغط مطولاً على الزر لشحن القوة</div>
-<div id="starsRow"></div>
-<div id="powerWrap"><div>💪 القوة: <span id="powerTxt">0%</span></div><div id="powerBar"><div id="powerFill"></div></div></div>
-<button id="holdBtn">اضغط مطولاً واترك للقلبة 🤾</button>
-<div style="display:flex;gap:8px;padding:0 12px 12px"><button class="btn2" style="flex:1" onclick="backHome()">🏠 المستويات</button><button class="btn2" style="flex:1" onclick="retry()">🔄 إعادة</button><button class="btn2" style="flex:1" onclick="nextLevel()">التالي ▶️</button></div>
-</div>
-</div>
-
-<div class="reward" id="rewardBox"><div><h2>🎉 قارورة جديدة!</h2><p id="rewardTxt"></p><div id="rewardEmoji" style="font-size:60px"></div><br><button class="btn" onclick="closeReward()">رائع! أكمل</button></div></div>
-
 <script>
-let player = localStorage.getItem('royal_name')||'';
-let progress = JSON.parse(localStorage.getItem('royal_progress')||'{}');
-let unlocked = parseInt(localStorage.getItem('royal_unlocked')||'1');
-let skin = localStorage.getItem('royal_skin')||'🍾';
-let cur=1, attempts=0, power=0, charging=false, flying=false, interval=null;
-let skins={10:'💙',20:'❤️',30:'💜',40:'🩵',50:'👑'};
-let skinNames={10:'القارورة الزرقاء',20:'القارورة الحمراء',30:'القارورة البنفسجية',40:'القارورة السماوية',50:'القارورة الذهبية 👑'};
-
-function saveName(){let v=document.getElementById('nameInput').value.trim(); if(v){player=v; localStorage.setItem('royal_name',v);} if(!player){alert('اكتب اسمك أولاً');return;} document.getElementById('playerLabel').textContent=player; renderLevels();}
-function renderLevels(){
- document.getElementById('playerLabel').textContent=player||'';
- document.getElementById('nameInput').value=player||'';
- document.getElementById('skinInfo').textContent='قارورتك الحالية: '+skin+'  •  وصلت للمستوى: '+unlocked;
- let h=''; for(let i=1;i<=50;i++){let locked=i>unlocked; let st=progress[i]||0; let stars='⭐'.repeat(st); let label=i>=40?'🌪️ '+i:i; h+=`<div class="lvl ${locked?'locked':''}" onclick="startLevel(${i},${locked})"><div>${label}</div><div class="stars">${stars}</div><div style="font-size:10px">${locked?'🔒':'▶️'}</div></div>`;}
- document.getElementById('levels').innerHTML=h;
+let level=parseInt(localStorage.getItem('royal_level')||'1');
+let done=JSON.parse(localStorage.getItem('royal_done')||'[]');
+let power=0, charging=false, interval=null;
+const bottles=['🍶','🥛','🧴','🍾','🥤','🍷','🫙','🥂','🍸','🧋'];
+const btn=document.getElementById('btn'), bottle=document.getElementById('bottle'), powerEl=document.getElementById('power'), msg=document.getElementById('msg'), room=document.getElementById('room'), winEl=document.getElementById('window'), leaves=document.getElementById('leaves');
+function render(){
+ document.getElementById('levelTxt').textContent='مستوى '+level+' / 50';
+ let b=bottles[Math.floor((level-1)/10)%bottles.length];
+ if(level===50) b='🏆';
+ bottle.textContent=b;
+ let isWind=level>=40;
+ room.classList.toggle('wind',isWind);
+ winEl.style.display=isWind?'block':'none';
+ leaves.style.display=isWind?'block':'none';
+ if(isWind) msg.textContent='⚠️ مستوى '+level+' - رياح قوية! نافذة مفتوحة، ركز!';
+ else msg.textContent='مستوى '+level+' - اضغط مطولاً واترك!';
+ let lvBox=document.getElementById('levels'); lvBox.innerHTML='';
+ for(let i=1;i<=50;i++){let d=document.createElement('button');d.className='lv'+(done.includes(i)?' done':'')+(i===level?' now':'');d.textContent=i;d.onclick=()=>{level=i;render();};lvBox.appendChild(d);}
 }
-function startLevel(n,locked){if(locked){alert('🔒 هذا المستوى مقفل! أكمل المستوى '+unlocked+' أولاً');return;} cur=n; attempts=0; document.getElementById('home').style.display='none'; document.getElementById('game').style.display='flex'; setupLevel();}
-function backHome(){document.getElementById('home').style.display='block'; document.getElementById('game').style.display='none'; renderLevels();}
-function retry(){attempts=0; setupLevel();}
-function nextLevel(){if(cur<50) startLevel(cur+1,false); else backHome();}
-function setupLevel(){
- let scene=document.getElementById('scene'); let isWind=cur>=40; scene.className=''; if(isWind) scene.id='scene'; scene.classList.toggle('wind',isWind);
- document.getElementById('windLabel').textContent=isWind?'🌪️ رياح قوية!':'';
- document.getElementById('lvlLabel').textContent='المستوى '+cur+' / 50';
- document.getElementById('attemptLabel').textContent='محاولة: '+(attempts+1);
- document.getElementById('msg').textContent=isWind?'🌪️ انتبه للرياح! النافذة مفتوحة':'اضغط مطولاً لشحن القوة';
- document.getElementById('starsRow').textContent='';
- // Table position by difficulty
- let tableW = cur<=10?110 : cur<=20?95 : cur<=30?78 : cur<=39?65 : 60;
- let tableLeft = cur<=10?62 : cur<=20?68 : cur<=30?74 : cur<=39?78 : 80;
- // in % of scene width
- let table=document.getElementById('table'); table.style.width=tableW+'px'; table.style.left=tableLeft+'%';
- let hand=document.getElementById('hand'); hand.style.display='block'; hand.style.left='18%';
- let b=document.getElementById('bottle'); b.textContent=skin; b.style.left='18%'; b.style.bottom='calc(18% + 14px)'; b.style.transform='rotate(0deg)';
- // leaves
- document.querySelectorAll('.leaf').forEach(e=>e.remove());
- if(isWind){for(let i=0;i<4;i++){let l=document.createElement('div'); l.className='leaf'; l.textContent='🍂'; l.style.top=(10+Math.random()*40)+'%'; l.style.left=(70+Math.random()*20)+'%'; l.style.animationDelay=(i*0.7)+'s'; scene.appendChild(l);}}
- power=0; updatePower();
-}
-function updatePower(){document.getElementById('powerFill').style.width=power+'%'; document.getElementById('powerTxt').textContent=Math.round(power)+'%';}
-let btn=document.getElementById('holdBtn');
-function startCharge(e){if(flying) return; e.preventDefault(); charging=true; power=0; interval=setInterval(()=>{power+=1.8; if(power>=100) power=100; updatePower();},18);}
-function endCharge(e){if(!charging) return; e.preventDefault(); charging=false; clearInterval(interval); doFlip();}
-btn.addEventListener('touchstart',startCharge,{passive:false});
-btn.addEventListener('touchend',endCharge,{passive:false});
-btn.addEventListener('mousedown',startCharge);
-btn.addEventListener('mouseup',endCharge);
-btn.addEventListener('mouseleave',()=>{if(charging) endCharge({preventDefault(){}})});
-
-function doFlip(){
- if(power<15){document.getElementById('msg').textContent='⚠️ قوة ضعيفة جداً! اضغط أطول'; return;}
- flying=true; attempts++;
- document.getElementById('hand').style.display='none';
- let b=document.getElementById('bottle'); let scene=document.getElementById('scene');
- let startX=18; let isWind=cur>=40;
- // target table left % and width
- let table=document.getElementById('table'); let tableLeftPct=parseFloat(table.style.left); let tableWpx=parseFloat(table.style.width);
- let sceneW=scene.clientWidth; let tableCenterPx = (tableLeftPct/100)*sceneW + tableWpx/2;
- let startPx = (startX/100)*sceneW;
- // power maps to distance, ideal power depends on level
- let ideal = cur<=10?55 : cur<=20?62 : cur<=30?70 : cur<=39?78 : 82;
- let diff = Math.abs(power-ideal);
- let landX = startPx + (power/100)* (tableCenterPx - startPx) * 1.35 + (Math.random()*30-15);
- if(isWind) landX += -40 - Math.random()*40; // wind pushes left
- let duration = 900 + diff*4;
- let startTime=performance.now();
- let rot=0;
- function anim(now){
-   let t=(now-startTime)/duration; if(t>1) t=1;
-   let x = startPx + (landX-startPx)*t;
-   let y = Math.sin(t*Math.PI)* (120 + power*1.2);
-   b.style.left=(x/sceneW*100)+'%';
-   b.style.bottom=`calc(18% + 14px + ${y}px)`;
-   rot+= 14; b.style.transform=`rotate(${rot}deg)`;
-   if(t<1) requestAnimationFrame(anim); else finishLand(landX, tableCenterPx, tableWpx/2);
- }
- requestAnimationFrame(anim);
-}
-function finishLand(landX, center, halfW){
- let b=document.getElementById('bottle');
- // final rotation near upright: we check rot modulo 360, success if within tolerance and inside table
- let onTable = Math.abs(landX-center) < halfW;
- // rotation success: if power close to ideal, bottle lands upright, else falls
- let ideal = cur<=10?55 : cur<=20?62 : cur<=30?70 : cur<=39?78 : 82;
- let diff = Math.abs(power-ideal);
- let upright = diff < 18;
- if(onTable && upright){
-   b.style.transform='rotate(0deg)'; b.style.bottom='calc(18% + 14px)'; b.style.left=((center-17)/document.getElementById('scene').clientWidth*100)+'%';
-   let stars = attempts===1?3 : attempts===2?2 : 1;
-   progress[cur]=Math.max(progress[cur]||0, stars); localStorage.setItem('royal_progress',JSON.stringify(progress));
-   document.getElementById('msg').textContent='🎉 أحسنت يا '+player+'! فزت!';
-   document.getElementById('starsRow').textContent='⭐'.repeat(stars);
-   if(cur===unlocked && cur<50){unlocked++; localStorage.setItem('royal_unlocked',unlocked);}
-   if(skins[cur] && skin!==skins[cur]){ // reward if first time reaching this milestone
-     // only show if newly unlocked
-     if(!localStorage.getItem('reward_'+cur)){ localStorage.setItem('reward_'+cur,'1'); skin=skins[cur]; localStorage.setItem('royal_skin',skin); setTimeout(()=>showReward(cur),600); }
+function start(e){e.preventDefault();charging=true;power=0;powerEl.style.width='0%';interval=setInterval(()=>{power+=2.2;if(power>=100)power=100;powerEl.style.width=power+'%';},20);}
+function end(e){e.preventDefault();if(!charging)return;charging=false;clearInterval(interval);
+ let need=45+level*0.6; let windEffect=level>=40?(Math.random()*18-9):0;
+ let diff=Math.abs(power+windEffect-need);
+ bottle.classList.add('fly'); bottle.style.transform='translateX(-50%) rotate('+(360+level*20)+'deg)';
+ setTimeout(()=>{
+   bottle.classList.remove('fly'); bottle.style.transform='translateX(-50%) rotate(0deg)';
+   if(diff<18){
+     let tries=diff<6?3:diff<12?2:1;
+     document.getElementById('stars').textContent='⭐'.repeat(tries)+' - أحسنت!';
+     msg.textContent='🎉 فزت! مستوى '+level+' اكتمل';
+     if(!done.includes(level)){done.push(level);localStorage.setItem('royal_done',JSON.stringify(done));}
+     setTimeout(()=>{if(level<50){level++;localStorage.setItem('royal_level',level);render();}else{msg.textContent='👑🏆 بطل! خلصت 50 مستوى! أنت أسطورة!';}},1200);
+   } else {
+     document.getElementById('stars').textContent='💔 حاول مرة ثانية';
+     msg.textContent=power<need?'القوة ضعيفة، اشحن أكثر!':'القوة قوية زيادة، خفف شوي!';
    }
-   setTimeout(()=>{ if(cur<50 && confirm('🎉 فزت! تنتقل للمستوى '+(cur+1)+'؟')) startLevel(cur+1,false); },900);
- } else {
-   b.style.transform='rotate(90deg)'; b.style.bottom='calc(18% + 2px)';
-   document.getElementById('msg').textContent= onTable ? '😅 وصلت للطاولة بس القارورة طاحت! جرب قوة أدق' : '💥 بعيدة عن الطاولة! اضبط القوة';
-   document.getElementById('attemptLabel').textContent='محاولة: '+(attempts+1);
- }
- flying=false;
+   powerEl.style.width='0%';
+ },750);
 }
-function showReward(lvl){document.getElementById('rewardTxt').textContent='حصلت على '+skinNames[lvl]+'!'; document.getElementById('rewardEmoji').textContent=skins[lvl]; document.getElementById('rewardBox').style.display='flex';}
-function closeReward(){document.getElementById('rewardBox').style.display='none';}
-renderLevels();
-if(player) document.getElementById('playerLabel').textContent=player;
+btn.addEventListener('touchstart',start); btn.addEventListener('touchend',end);
+btn.addEventListener('mousedown',start); btn.addEventListener('mouseup',end);
+render();
 </script>
 </body>
 </html>
