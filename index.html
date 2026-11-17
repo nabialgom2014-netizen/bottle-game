@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bottle Challenge</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden;font-family:Arial}
+#game{position:relative;width:420px;height:740px;max-width:100vw;max-height:100vh;overflow:hidden;background-image:url('main-game-screen.png');background-size:100% 100%;background-repeat:no-repeat;cursor:pointer;flex-shrink:0;display:none}
+#game.windyRoom{background-image:url('main-game-screen-windy.png');background-size:100% 100%}
+#startScreen{position:relative;width:420px;height:740px;max-width:100vw;max-height:100vh;background:linear-gradient(180deg,#1a1a2e,#16213e);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;overflow:hidden;z-index:100}
+#startScreen h1{font-size:38px;margin:5px 0;color:#ffd700;text-shadow:3px 3px 0 #000}
+#startScreen p{opacity:.9;font-size:15px}
+#startScreen input,#startScreen select{width:100%;max-width:300px;padding:13px;border-radius:12px;border:2px solid #fff;font-size:16px;margin:8px 0;text-align:center;outline:none;position:relative;z-index:101}
+#startBtn{width:100%;max-width:300px;padding:14px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-size:20px;font-weight:bold;cursor:pointer;margin-top:10px;box-shadow:0 4px 0 #15803d;position:relative;z-index:102}
+#levelTitle{margin:12px 0 6px;font-size:16px;font-weight:bold;color:#ffd700}
+#levelGrid{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;max-width:320px;margin:5px 0 10px;position:relative;z-index:101}
+.lvlBtn{width:44px;height:44px;border-radius:12px;border:2px solid #fff;background:rgba(255,255,255,.15);color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
+.lvlBtn.windy{background:rgba(56,189,248,.35);border-color:#38bdf8}
+.lvlBtn.selected{background:#ffd700;color:#000;border-color:#ffd700;transform:scale(1.1);box-shadow:0 0 12px #ffd700}
+#selectedLevelTxt{font-size:13px;opacity:.9;margin:2px 0}
+#topBar{position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,.75);color:#fff;padding:9px 10px;display:flex;justify-content:space-between;align-items:center;font-weight:bold;z-index:20;font-size:13px}
+#levelTxt{cursor:pointer;background:#ffd700;color:#000;padding:3px 8px;border-radius:12px}
+#hearts{font-size:18px;letter-spacing:2px}
+#hand{position:absolute;bottom:36%;left:-10px;width:280px;z-index:6;mix-blend-mode:multiply}
+/* القارورة بدون multiply - الألوان الأصلية */
+#bottle{position:absolute;display:none;width:95px;height:135px;object-fit:contain;z-index:7;left:50%;transform:translateX(-50%);bottom:320px;will-change:left,bottom,transform;filter:drop-shadow(0 4px 4px rgba(0,0,0,.4));background:transparent}
+#broken{position:absolute;display:none;width:160px;z-index:8;left:50%;transform:translateX(-50%);bottom:135px}
+#roomWindow{position:absolute;top:52px;right:12px;width:110px;height:110px;background:#aee7ff;border:4px solid #fff;border-radius:10px;z-index:5;display:none;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+#roomWindow:before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:#fff}
+#roomWindow:after{content:'';position:absolute;top:50%;left:0;right:0;height:3px;background:#fff}
+.windLine{position:absolute;left:-30px;height:3px;background:rgba(255,255,255,.9);border-radius:3px;animation:windMove 1.2s linear infinite}
+@keyframes windMove{to{transform:translateX(180px)}}
+#tableTint{position:absolute;left:0;right:0;bottom:100px;height:160px;background:linear-gradient(180deg,rgba(56,189,248,.0),rgba(56,189,248,.25));z-index:4;display:none;pointer-events:none}
+#powerWrap{position:absolute;bottom:14px;left:7.5%;right:7.5%;height:39px;z-index:10;border:3px solid #fff;border-radius:25px;overflow:hidden;background:linear-gradient(to right,#06b6d4 0%,#06b6d4 5%,#3b82f6 5%,#3b82f6 10%,#8b5cf6 10%,#8b5cf6 15%,#ec4899 15%,#ec4899 20%,#7c3aed 20%,#7c3aed 25%,#e11d48 25%,#e11d48 32%,#f97316 32%,#f97316 39%,#eab308 39%,#eab308 46%,#22c55e 46%,#22c55e 54%,#eab308 54%,#eab308 61%,#f97316 61%,#f97316 68%,#e11d48 68%,#e11d48 75%,#7c3aed 75%,#7c3aed 80%,#ec4899 80%,#ec4899 85%,#8b5cf6 85%,#8b5cf6 90%,#3b82f6 90%,#3b82f6 95%,#06b6d4 95%,#06b6d4 100%);box-shadow:0 3px 10px rgba(0,0,0,.6)}
+#greenZone{position:absolute;top:0;bottom:0;background:rgba(34,197,94,.95);border-left:3px solid #fff;border-right:3px solid #fff;z-index:1;transition:left .3s,width .3s}
+#needle{position:absolute;bottom:55px;left:50%;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:20px solid #fff;transform:translateX(-50%);z-index:11;filter:drop-shadow(0 3px 3px #000)}
+#windCircle{position:absolute;bottom:88px;left:7.5%;width:52px;height:52px;background:#fff;border-radius:50%;border:3px solid #fff;z-index:20;display:none;box-shadow:0 4px 12px rgba(0,0,0,.5);text-align:center}
+#windCircle .ring1{position:absolute;inset:8px;border:1.2px solid #cbd5e1;border-radius:50%}
+#windCircle .ring2{position:absolute;inset:14px;border:1.2px solid #e2e8f0;border-radius:50%}
+#windArrowIcon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:22px;line-height:1;transition:transform .4s;z-index:2}
+#windNum{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#ffd700;padding:2px 8px;border-radius:12px;font-weight:bold;font-size:12px;white-space:nowrap;border:1px solid #ffd700}
+#windWrap{position:absolute;bottom:60px;left:7.5%;right:7.5%;height:18px;z-index:10;border:2px solid #fff;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.55);display:none}
+#windCenter{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(255,255,255,.7);z-index:1}
+#windFill{position:absolute;top:0;bottom:0;background:#38bdf8;z-index:2;transition:left .4s,width .4s}
+#windArrowBar{position:absolute;bottom:78px;left:50%;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:12px solid #fff;transform:translateX(-50%);z-index:11;display:none;filter:drop-shadow(0 2px 2px #000)}
+#windHintTxt{position:absolute;bottom:145px;left:0;right:0;text-align:center;color:#fff;font-weight:bold;text-shadow:2px 2px 0 #000;z-index:15;font-size:12px;display:none}
+#msg{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);font-size:30px;font-weight:bold;color:#fff;text-shadow:3px 3px 0 #000;z-index:30;display:none;text-align:center;width:90%}
+#hint{position:absolute;bottom:150px;left:0;right:0;text-align:center;color:#fff;font-weight:bold;text-shadow:2px 2px 0 #000;z-index:15;font-size:13px}
+#confetti{position:absolute;inset:0;pointer-events:none;z-index:40;overflow:hidden;display:none}
+.conf{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall 2.5s linear forwards}
+@keyframes fall{to{transform:translateY(780px) rotate(720deg);opacity:.8}}
+#badgeModal{position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+#badgeModal .medal{font-size:80px}
+#badgeModal button{padding:12px 24px;background:#ffd700;border:none;border-radius:12px;font-weight:bold;font-size:18px;cursor:pointer;margin-top:15px}
+#gameOverModal{position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:60;display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+#gameOverModal h2{font-size:32px;margin:10px 0}
+#gameOverModal button{padding:14px 28px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-weight:bold;font-size:19px;cursor:pointer;margin-top:15px}
+#levelModal{position:absolute;inset:0;background:rgba(0,0,0,.88);z-index:70;display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+#levelModal h2{margin:5px 0}
+#levelModalGrid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:340px;margin:12px 0}
+#levelModalGrid .lvlBtn{width:48px;height:48px;font-size:17px}
+#closeLevelModal{padding:10px 22px;background:#fff;color:#000;border:none;border-radius:12px;font-weight:bold;cursor:pointer;margin-top:10px}
+#musicBar{position:absolute;top:48px;right:10px;z-index:30;display:flex;gap:5px;align-items:center}
+#musicBtn{background:rgba(0,0,0,.75);color:#fff;border:1px solid #fff;border-radius:20px;padding:6px 10px;cursor:pointer;font-size:12px}
+#musicSelect{background:rgba(0,0,0,.8);color:#fff;border:1px solid #fff;border-radius:20px;padding:6px;font-size:12px;outline:none;cursor:pointer;max-width:140px}
+</style>
+</head>
+<body>
+<div id="startScreen">
+  <h1>🍾 Bottle Challenge</h1>
+  <p id="startSub">Enter your name to start</p>
+  <input id="playerName" placeholder="Your Name / اسمك / Ton Nom" maxlength="20">
+  <select id="langSelect"><option value="en">English - Default</option><option value="ar">العربية</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="tr">Türkçe</option></select>
+  <div id="levelTitle">🎮 Choose Level - اختر المستوى</div>
+  <div id="levelGrid"></div>
+  <div id="selectedLevelTxt">Selected: Level 1</div>
+  <button id="startBtn" type="button">▶ START - Level 1</button>
+  <p style="font-size:12px;opacity:.7;margin-top:12px">3 lives ❤️❤️❤️ • Get the bottle in the green zone<br>💨 Blue = Windy Levels 11-20</p>
+</div>
+<div id="game">
+  <div id="topBar"><span id="levelTxt">Level 1 ▼</span><span id="scoreTxt">✅ 0 / 10</span><span id="needTxt">Need: 5</span><span id="hearts">❤️❤️❤️</span></div>
+  <div id="musicBar"><select id="musicSelect"><option value="0">🎵 1. Chill - L1</option><option value="1">🎵 2. Happy - L2</option><option value="2">🎵 3. Epic - L3</option><option value="3">🎵 4. Retro - L4</option><option value="4">🎵 5. Dreamy - L5</option><option value="5">🎵 6. Jazz Night - L6</option><option value="6">🎵 7. Adventure - L7</option><option value="7">🎵 8. Calm Piano - L8</option><option value="8">🎵 9. Party - L9</option><option value="9">🎵 10. Mystery - L10</option></select><button id="musicBtn">🔊 ON</button></div>
+  <div id="roomWindow"><div class="windLine" style="top:20px;width:40px"></div><div class="windLine" style="top:50px;width:55px;animation-delay:.3s"></div><div class="windLine" style="top:80px;width:35px;animation-delay:.6s"></div>🌬️</div>
+  <div id="tableTint"></div>
+  <img id="hand" src="hand.png">
+  <img id="bottle" src="bottle1.png" onerror="this.src='bottle10.png'">
+  <img id="broken" src="broken.png">
+  <div id="msg"></div><div id="hint"></div>
+  <div id="windCircle"><div id="windNum">2.0</div><div class="ring1"></div><div class="ring2"></div><div id="windArrowIcon">➤</div></div>
+  <div id="windHintTxt"></div><div id="windArrowBar"></div>
+  <div id="windWrap"><div id="windCenter"></div><div id="windFill"></div></div>
+  <div id="powerWrap"><div id="greenZone"></div></div>
+  <div id="needle"></div><div id="confetti"></div>
+  <div id="badgeModal"><div class="medal">🏅</div><h2 id="badgeTitle">Badge!</h2><p id="badgeText"></p><button id="badgeBtn">Continue</button></div>
+  <div id="gameOverModal"><div style="font-size:70px">💔</div><h2 id="gameOverTitle">Game Over</h2><p id="gameOverText">Hearts finished</p><button id="retryBtn">🔄 Try Same Level Again</button></div>
+  <div id="levelModal"><h2>🎮 Choose Level</h2><p>اختر المستوى الذي تريد اللعب فيه</p><div id="levelModalGrid"></div><button id="closeLevelModal">✖ Close</button></div>
+</div>
+<script>
+let playerName="Player", lang="en";
+let level=1, selectedLevel=1, success=0,throws=0,power=0,dir=1,charging=false,flying=false,timer=null,lives=3,musicOn=true,musicTimer=null,musicIdx=0,gameOverShown=false;
+let currentWindDir=0, currentWindPower=0;
+let game=document.getElementById('game');
+function needlePos(p){ return (7.5 + p*0.85) + '%'; }
+function setNeedle(p){ document.getElementById('needle').style.left = needlePos(p); }
+const T={
+en:{start:"▶ START",sub:"Enter your name to start",hint:"Press & hold, then release to throw",need:"Need:",level:"Level",well:"Well Done",badge:"New Badge!",badgeText:"You completed 3 levels",cont:"Continue",gameOver:"Game Over",gameOverText:"Hearts finished - You stay in same level",retry:"🔄 Try Same Level Again",tryAgain:"Try Again",perfect:"Perfect! ✅",broken:"Broken! ❌",wind:"Wind",windLeft:"Wind ← Left - Aim RIGHT",windRight:"Wind → Right - Aim LEFT",windCalm:"No Wind - Aim Center"},
+ar:{start:"▶ ابدأ",sub:"اكتب اسمك للبدء",hint:"اضغط مطولاً ثم اترك لترمي",need:"المطلوب:",level:"المستوى",well:"أحسنت",badge:"نيشان جديد!",badgeText:"أنجزت 3 مستويات",cont:"متابعة",gameOver:"انتهت القلوب",gameOverText:"انتهت قلوبك - ستبقى في نفس المستوى",retry:"🔄 حاول نفس المستوى مجدداً",tryAgain:"حاول مجدداً",perfect:"ممتاز! ✅",broken:"انكسرت! ❌",wind:"الرياح",windLeft:"رياح ← يسار - صوّب يمين",windRight:"رياح → يمين - صوّب يسار",windCalm:"لا رياح - صوّب النص"},
+fr:{start:"▶ COMMENCER",sub:"Entrez votre nom",hint:"Appuyez et relâchez pour lancer",need:"Besoin:",level:"Niveau",well:"Bravo",badge:"Nouveau Badge!",badgeText:"Vous avez terminé 3 niveaux",cont:"Continuer",gameOver:"Partie Terminée",gameOverText:"Coeurs terminés - Vous restez au même niveau",retry:"🔄 Réessayer le même niveau",tryAgain:"Réessayer",perfect:"Parfait! ✅",broken:"Cassée! ❌",wind:"Vent",windLeft:"Vent ← Gauche - Visez Droite",windRight:"Vent → Droite - Visez Gauche",windCalm:"Pas de vent - Visez Centre"},
+es:{start:"▶ EMPEZAR",sub:"Escribe tu nombre",hint:"Mantén y suelta para lanzar",need:"Necesitas:",level:"Nivel",well:"¡Bien Hecho!",badge:"¡Nueva Medalla!",badgeText:"Completaste 3 niveles",cont:"Continuar",gameOver:"Fin del Juego",gameOverText:"Sin corazones - Te quedas en el mismo nivel",retry:"🔄 Intentar el mismo nivel",tryAgain:"Intentar de nuevo",perfect:"¡Perfecto! ✅",broken:"¡Rota! ❌",wind:"Viento",windLeft:"Viento ← Izquierda - Apunta Derecha",windRight:"Viento → Derecha - Apunta Izquierda",windCalm:"Sin viento - Apunta Centro"},
+de:{start:"▶ START",sub:"Gib deinen Namen ein",hint:"Halten und loslassen zum Werfen",need:"Brauchst:",level:"Level",well:"Gut Gemacht",badge:"Neues Abzeichen!",badgeText:"Du hast 3 Level geschafft",cont:"Weiter",gameOver:"Spiel Vorbei",gameOverText:"Herzen leer - Du bleibst im gleichen Level",retry:"🔄 Gleiches Level nochmal",tryAgain:"Nochmal",perfect:"Perfekt! ✅",broken:"Zerbrochen! ❌",wind:"Wind",windLeft:"Wind ← Links - Ziele Rechts",windRight:"Wind → Rechts - Ziele Links",windCalm:"Kein Wind - Ziele Mitte"},
+tr:{start:"▶ BAŞLA",sub:"Adını yaz",hint:"Basılı tut ve bırak",need:"Gerekli:",level:"Seviye",well:"Aferin",badge:"Yeni Rozet!",badgeText:"3 seviyeyi tamamladın",cont:"Devam",gameOver:"Oyun Bitti",gameOverText:"Kalpler bitti - Aynı seviyede kalıyorsun",retry:"🔄 Aynı seviyeyi tekrar dene",tryAgain:"Tekrar Dene",perfect:"Mükemmel! ✅",broken:"Kırıldı! ❌",wind:"Rüzgar",windLeft:"Rüzgar ← Sol - Sağa Nişan Al",windRight:"Rüzgar → Sağ - Sola Nişan Al",windCalm:"Rüzgar yok - Merkeze Nişan Al"}
+};
+function t(k){return (T[lang]||T.en)[k]||T.en[k];}
+function needFor(l){ if(l==1) return 5; if(l==2) return 6; if(l==3) return 7; if(l>=11) return 6; return 8; }
+function speedFor(l){ if(l<=1) return 1.0; if(l==2) return 1.25; if(l==3) return 1.45; if(l==4) return 1.60; return 1.75; }
+function greenFor(l){ let widths={1:20, 2:16, 3:12, 4:10, 5:9, 6:8, 7:7, 8:6, 9:5, 10:4, 11:4, 12:4, 13:3.8, 14:3.8, 15:3.5, 16:3.5, 17:3.2, 18:3.2, 19:3, 20:3}; let w = widths[l] || 3; return {min:50-w/2, max:50+w/2, width:w}; }
+function windMaxFor(l){ if(l<11) return 0; if(l==11) return 2.0; if(l<=13) return 3.0; if(l<=15) return 4.0; return 5.0; }
+
+// ===== حذف الخلفية البيضاء والسوداء تلقائياً - بدون أي موقع =====
+let cleanedCache = {};
+function cleanBottleBackground(imgEl, src){
+  if(cleanedCache[src]){ imgEl.src = cleanedCache[src]; return; }
+  let tmp = new Image();
+  tmp.onload = function(){
+    try{
+      let c = document.createElement('canvas');
+      c.width = tmp.naturalWidth; c.height = tmp.naturalHeight;
+      let ctx = c.getContext('2d');
+      ctx.drawImage(tmp,0,0);
+      let imgData = ctx.getImageData(0,0,c.width,c.height);
+      let d = imgData.data;
+      // نقرأ 4 زوايا لنعرف لون الخلفية - أبيض أو أسود
+      function getPixel(x,y){ let i=(y*c.width+x)*4; return [d[i],d[i+1],d[i+2]]; }
+      let corners = [getPixel(2,2), getPixel(c.width-3,2), getPixel(2,c.height-3), getPixel(c.width-3,c.height-3)];
+      let br=0,bg=0,bb=0;
+      corners.forEach(p=>{ br+=p[0]; bg+=p[1]; bb+=p[2]; });
+      br/=4; bg/=4; bb/=4;
+      let isWhite = br>200 && bg>200 && bb>200;
+      let isBlack = br<40 && bg<40 && bb<40;
+      // إذا الخلفية ليست بيضاء ولا سوداء، لا نغير شيئاً
+      if(!isWhite && !isBlack) return;
+      for(let i=0;i<d.length;i+=4){
+        let r=d[i], g=d[i+1], b=d[i+2];
+        let diff = Math.abs(r-br)+Math.abs(g-bg)+Math.abs(b-bb);
+        // إزالة قوية للخلفية الصافية
+        if(diff < 45){ d[i+3]=0; }
+        // حواف ناعمة فقط - لا نلمس لون القارورة
+        else if(diff < 95){ d[i+3] = Math.floor(d[i+3] * (diff-45)/50); }
+      }
+      ctx.putImageData(imgData,0,0);
+      let cleanUrl = c.toDataURL('image/png');
+      cleanedCache[src]=cleanUrl;
+      imgEl.src = cleanUrl;
+    }catch(e){
+      // إذا المتصفح منع Canvas بسبب الأمان، نترك الصورة مثل ما هي
+    }
+  };
+  tmp.onerror = function(){};
+  tmp.src = src;
+}
+function buildLevelButtons(){ let grid=document.getElementById('levelGrid'); let modalGrid=document.getElementById('levelModalGrid'); grid.innerHTML=''; modalGrid.innerHTML=''; for(let i=1;i<=20;i++){ let b1=document.createElement('button'); b1.className='lvlBtn'+(i>=11?' windy':'')+(i==selectedLevel?' selected':''); b1.innerText=i; b1.onclick=(e)=>{ e.stopPropagation(); selectLevel(i); }; grid.appendChild(b1); let b2=document.createElement('button'); b2.className='lvlBtn'+(i>=11?' windy':'')+(i==level?' selected':''); b2.innerText=i; b2.onclick=(e)=>{ e.stopPropagation(); jumpToLevel(i); }; modalGrid.appendChild(b2); } }
+function selectLevel(n){ selectedLevel=n; level=n; document.getElementById('selectedLevelTxt').innerText='Selected: Level '+n+(n>=11?' 💨 Windy':''); document.getElementById('startBtn').innerText='▶ START - Level '+n; buildLevelButtons(); }
+function jumpToLevel(n){ level=n; selectedLevel=n; success=0; throws=0; lives=3; forceReset(); newWind(); updateUI(); musicForLevel(); document.getElementById('levelModal').style.display='none'; buildLevelButtons(); }
+document.getElementById('levelTxt').onclick=(e)=>{ e.stopPropagation(); buildLevelButtons(); document.getElementById('levelModal').style.display='flex'; };
+document.getElementById('closeLevelModal').onclick=(e)=>{ e.stopPropagation(); document.getElementById('levelModal').style.display='none'; };
+buildLevelButtons();
+function newWind(){ if(level<11){ currentWindDir=0; currentWindPower=0; return; } let max=windMaxFor(level); currentWindPower = parseFloat((Math.random()*(max-1)+1).toFixed(1)); let r=Math.random(); if(r<0.2){ currentWindDir=0; currentWindPower=0; } else if(r<0.6){ currentWindDir=-1; } else { currentWindDir=1; } updateWindUI(); }
+function updateWindUI(){ let circle=document.getElementById('windCircle'), arrow=document.getElementById('windArrowIcon'), num=document.getElementById('windNum'), hint=document.getElementById('windHintTxt'); let wrap=document.getElementById('windWrap'), fill=document.getElementById('windFill'), arrowBar=document.getElementById('windArrowBar'); let isWindy = level>=11; if(isWindy){ game.classList.add('windyRoom'); } else { game.classList.remove('windyRoom'); } document.getElementById('roomWindow').style.display = 'none'; document.getElementById('tableTint').style.display = 'none'; if(level<11){ circle.style.display='none'; hint.style.display='none'; wrap.style.display='none'; arrowBar.style.display='none'; return; } circle.style.display='block'; hint.style.display='block'; wrap.style.display='block'; arrowBar.style.display='block'; if(currentWindPower<=2) circle.style.borderColor='#fff'; else if(currentWindPower<=4) circle.style.borderColor='#ffd700'; else circle.style.borderColor='#22c55e'; num.innerText = currentWindPower.toFixed(1); let pos = 50 + currentWindDir * currentWindPower * 8; arrowBar.style.left = (7.5 + pos*0.85) + '%'; if(currentWindDir==0){ arrow.innerText='•'; arrow.style.transform='translate(-50%,-50%) rotate(0deg)'; arrow.style.color='#94a3b8'; hint.innerText='💨 '+t('windCalm')+' - 0.0'; fill.style.left='50%'; fill.style.width='0%'; fill.style.background='#94a3b8'; } else if(currentWindDir==-1){ arrow.innerText='➤'; arrow.style.transform='translate(-50%,-50%) rotate(180deg)'; arrow.style.color='#ef4444'; hint.innerText='💨 '+t('windLeft')+' - '+currentWindPower.toFixed(1); let w = currentWindPower*8; fill.style.left=(50-w)+'%'; fill.style.width=w+'%'; fill.style.background='#38bdf8'; } else { arrow.innerText='➤'; arrow.style.transform='translate(-50%,-50%) rotate(0deg)'; arrow.style.color='#ef4444'; hint.innerText='💨 '+t('windRight')+' - '+currentWindPower.toFixed(1); let w = currentWindPower*8; fill.style.left='50%'; fill.style.width=w+'%'; fill.style.background='#fb923c'; } }
+let audioCtx=null;
+function ensureAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state=='suspended') audioCtx.resume(); }catch(e){} }
+function beep(f,d,type,v,delay){ if(!audioCtx) return; setTimeout(()=>{ try{ let o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.value=v||0.2; o.connect(g); g.connect(audioCtx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d); o.stop(audioCtx.currentTime+d); }catch(e){} },delay||0); }
+function playSuccess(){ beep(523,.15,'sine',.25); beep(784,.25,'sine',.25,120); }
+function playBreak(){ if(!audioCtx) return; try{ let len=audioCtx.sampleRate*0.35, buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate), data=buf.getChannelData(0); for(let i=0;i<len;i++){ data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2); } let src=audioCtx.createBufferSource(); src.buffer=buf; let bp=audioCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2200; bp.Q.value=0.8; let g=audioCtx.createGain(); g.gain.value=0.9; src.connect(bp); bp.connect(g); g.connect(audioCtx.destination); src.start(); for(let i=0;i<10;i++){ let f=1800+Math.random()*2800; beep(f,0.08+Math.random()*0.12,'triangle',0.08,i*40+Math.random()*60); } beep(120,.3,'sawtooth',.12,80); }catch(e){} }
+function playThrow(){ beep(200,.1,'sine',.15); beep(400,.15,'sine',.15,80); }
+function playApplause(){ for(let i=0;i<12;i++){ beep(1000+Math.random()*500,.05,'square',.06,i*120); } beep(523,.2,'sine',.25,200); beep(659,.2,'sine',.25,400); beep(784,.4,'sine',.25,600); }
+const MUSICS=[ {name:'Chill', tempo:600, type:'triangle', notes:[262,330,392,523,392,330,262,294]}, {name:'Happy', tempo:420, type:'sine', notes:[523,659,784,659,523,659,784,1046]}, {name:'Epic', tempo:500, type:'sawtooth', notes:[220,262,330,392,440,392,330,262]}, {name:'Retro', tempo:350, type:'square', notes:[440,440,494,523,494,440,392,330]}, {name:'Dreamy', tempo:700, type:'sine', notes:[392,440,523,587,659,587,523,440]}, {name:'Jazz Night', tempo:550, type:'triangle', notes:[262,311,349,392,466,392,349,311]}, {name:'Adventure', tempo:450, type:'sawtooth', notes:[330,392,440,523,440,392,330,294]}, {name:'Calm Piano', tempo:800, type:'sine', notes:[261,293,329,349,392,440,493,523]}, {name:'Party', tempo:300, type:'square', notes:[523,523,659,659,784,784,659,523]}, {name:'Mystery', tempo:650, type:'triangle', notes:[220,233,262,277,311,330,349,392]}, ];
+function startMusicWithTempo(){ if(musicTimer) clearInterval(musicTimer); let i=0; let m=MUSICS[musicIdx]; musicTimer=setInterval(()=>{ if(musicOn && audioCtx){ beep(m.notes[i % m.notes.length], .35, m.type, .05); if(i%4==0) beep(m.notes[0]/2, .4, 'sine', .04); i++; } }, m.tempo); }
+function musicForLevel(){ musicIdx = (level-1) % 10; let sel=document.getElementById('musicSelect'); if(sel) sel.value = String(musicIdx); if(musicOn) startMusicWithTempo(); }
+function showConfetti(){ let c=document.getElementById('confetti'); c.innerHTML=''; c.style.display='block'; let colors=['#ff0','#f00','#0f0','#00f','#f0f','#0ff','#ffd700','#06b6d4','#ec4899']; for(let i=0;i<60;i++){ let d=document.createElement('div'); d.className='conf'; d.style.left=Math.random()*100+'%'; d.style.background=colors[i%colors.length]; d.style.animationDelay=(Math.random()*0.8)+'s'; c.appendChild(d); } setTimeout(()=>c.style.display='none',3000); }
+function showBadge(){ let m=document.getElementById('badgeModal'); document.getElementById('badgeTitle').innerText='🏅 '+t('badge'); document.getElementById('badgeText').innerText=t('badgeText')+'\n'+playerName+' - Level '+level; document.getElementById('badgeBtn').innerText=t('cont'); m.style.display='flex'; playApplause(); showConfetti(); }
+document.getElementById('badgeBtn').onclick=(e)=>{ e.stopPropagation(); document.getElementById('badgeModal').style.display='none'; };
+function forceReset(){ if(timer){ clearInterval(timer); timer=null; } charging=false; flying=false; gameOverShown=false; power=0; dir=1; let bot=document.getElementById('bottle'), brk=document.getElementById('broken'), hand=document.getElementById('hand'); bot.style.display='none'; brk.style.display='none'; hand.style.display='block'; bot.style.transition='none'; bot.style.bottom='320px'; bot.style.left='50%'; bot.style.transform='translateX(-50%) rotate(0deg)'; setNeedle(50); document.getElementById('msg').style.display='none'; document.getElementById('hint').style.display='block'; document.getElementById('gameOverModal').style.display='none'; document.getElementById('badgeModal').style.display='none'; document.getElementById('levelModal').style.display='none'; }
+document.getElementById('retryBtn').onclick=(e)=>{ e.stopPropagation(); lives=3; success=0; throws=0; forceReset(); newWind(); updateUI(); };
+let musicBar=document.getElementById('musicBar'); musicBar.addEventListener('mousedown',e=>e.stopPropagation()); musicBar.addEventListener('mouseup',e=>e.stopPropagation()); musicBar.addEventListener('click',e=>e.stopPropagation()); musicBar.addEventListener('touchstart',e=>e.stopPropagation()); musicBar.addEventListener('touchend',e=>e.stopPropagation());
+document.getElementById('musicBtn').onclick=(e)=>{ e.stopPropagation(); musicOn=!musicOn; document.getElementById('musicBtn').innerText=musicOn?'🔊 ON':'🔇 OFF'; };
+document.getElementById('musicSelect').onclick=(e)=>{ e.stopPropagation(); };
+document.getElementById('musicSelect').onchange=(e)=>{ e.stopPropagation(); musicIdx=parseInt(e.target.value); if(musicOn) startMusicWithTempo(); };
+function updateUI(){
+  document.getElementById('levelTxt').innerText=t('level')+' '+level+' ▼';
+  document.getElementById('scoreTxt').innerText='✅ '+success+' / 10';
+  document.getElementById('needTxt').innerText=t('need')+' '+needFor(level);
+  document.getElementById('hearts').innerText='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+  let g=greenFor(level); let gz=document.getElementById('greenZone'); gz.style.left=g.min+'%'; gz.style.width=(g.max-g.min)+'%';
+  let bNum = level;
+  let bottleImg=document.getElementById('bottle');
+  let src = 'bottle'+bNum+'.png';
+  bottleImg.onerror=function(){ this.onerror=null; this.src='bottle10.png'; };
+  bottleImg.src=src;
+  // *** هنا يتم حذف الخلفية البيضاء والسوداء تلقائياً ***
+  cleanBottleBackground(bottleImg, src);
+  bottleImg.style.width='95px'; bottleImg.style.height='135px';
+  document.getElementById('hint').innerText=t('hint');
+  document.getElementById('gameOverTitle').innerText=t('gameOver');
+  document.getElementById('gameOverText').innerText=t('gameOverText')+' - Level '+level;
+  document.getElementById('retryBtn').innerText=t('retry');
+  updateWindUI();
+}
+function showMsg(txt,long){ let m=document.getElementById('msg'); m.innerText=txt; m.style.display='block'; setTimeout(()=>m.style.display='none',long?2600:1300); }
+function startGame(){ try{ playerName=document.getElementById('playerName').value.trim()||"Player"; lang=document.getElementById('langSelect').value; level=selectedLevel; success=0; throws=0; lives=3; document.getElementById('startScreen').style.display='none'; game.style.display='block'; ensureAudio(); musicForLevel(); newWind(); updateUI(); }catch(err){ alert('Error: '+err.message); } }
+let startBtn=document.getElementById('startBtn'); startBtn.addEventListener('click', startGame); startBtn.addEventListener('touchend', function(e){ e.preventDefault(); startGame(); });
+document.getElementById('langSelect').addEventListener('change', (e)=>{ lang=e.target.value; document.getElementById('startBtn').innerText='▶ START - Level '+selectedLevel; document.getElementById('startSub').innerText=T[lang].sub; });
+function startCharge(e){ if(gameOverShown) return; if(e.target.closest('#musicBar') || e.target.closest('#topBar') || e.target.closest('#badgeModal') || e.target.closest('#gameOverModal') || e.target.closest('#windCircle') || e.target.closest('#roomWindow') || e.target.closest('#levelModal')) return; if(flying || charging) return; if(timer) clearInterval(timer); ensureAudio(); charging=true; document.getElementById('hint').style.display='none'; let speed=speedFor(level); timer=setInterval(()=>{ power+=dir*speed; if(power>=100){power=100;dir=-1} if(power<=0){power=0;dir=1} setNeedle(power); },16); }
+function throwBottle(e){ if(gameOverShown) return; if(e && (e.target.closest && (e.target.closest('#musicBar') || e.target.closest('#topBar') || e.target.closest('#badgeModal') || e.target.closest('#gameOverModal') || e.target.closest('#windCircle') || e.target.closest('#roomWindow') || e.target.closest('#levelModal')))) return; if(!charging||flying) return; charging=false; if(timer){ clearInterval(timer); timer=null; } flying=true; playThrow(); let hand=document.getElementById('hand'), bot=document.getElementById('bottle'), brk=document.getElementById('broken'); hand.style.display='none'; brk.style.display='none'; let startBottom=320, startLeft=50, endBottom=138, endLeft=50, peakBottom=500; let duration=1100 - Math.min(level*40, 300); let totalRotation=360 + level*180; bot.style.display='block'; bot.style.transition='none'; bot.style.bottom=startBottom+'px'; bot.style.left=startLeft+'%'; bot.style.transform='translateX(-50%) rotate(0deg)'; let g=greenFor(level); let windPush = currentWindDir * currentWindPower * 1.2; let effectivePower = power + windPush; let ok=effectivePower>=g.min && effectivePower<=g.max; let startTime=performance.now(); let safety=setTimeout(()=>{ if(flying && !gameOverShown){ forceReset(); updateUI(); } },2500); function animate(now){ let p=(now-startTime)/duration; if(p>1) p=1; let ease = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2; let curBottom = startBottom + (peakBottom-startBottom)*Math.sin(p*Math.PI) + (endBottom-startBottom)*p; let windDrift = windPush * 0.8 * Math.sin(p*Math.PI); let curLeft = startLeft + Math.sin(p*Math.PI)*4 + windDrift; let rot = totalRotation * ease; bot.style.bottom=curBottom+'px'; bot.style.left=curLeft+'%'; bot.style.transform='translateX(-50%) rotate('+rot+'deg)'; if(p<1){ requestAnimationFrame(animate); } else{ clearTimeout(safety); if(ok){ bot.style.bottom=endBottom+'px'; bot.style.left=(50+windDrift)+'%'; bot.style.transform='translateX(-50%) rotate(0deg)'; success++; throws++; playSuccess(); showMsg(t('perfect')); } else{ bot.style.display='none'; brk.style.display='block'; throws++; lives--; playBreak(); showMsg(t('broken')); } power=0; setNeedle(50); updateUI(); setTimeout(()=>{ bot.style.display='none'; brk.style.display='none'; hand.style.display='block'; newWind(); if(lives<=0){ gameOverShown=true; flying=false; charging=false; if(timer){ clearInterval(timer); timer=null; } document.getElementById('gameOverTitle').innerText=t('gameOver'); document.getElementById('gameOverText').innerText=t('gameOverText')+' - Level '+level; document.getElementById('retryBtn').innerText=t('retry'); document.getElementById('gameOverModal').style.display='flex'; } else if(success>=needFor(level)){ level++; selectedLevel=level; success=0; throws=0; showMsg(t('well')+' '+playerName+'! 🎉',true); playApplause(); showConfetti(); musicForLevel(); if(level%3==1){ setTimeout(showBadge,1200); } newWind(); } else if(throws>=10){ showMsg(t('tryAgain'),true); success=0; throws=0; } bot.style.bottom='320px'; bot.style.left='50%'; bot.style.transform='translateX(-50%) rotate(0deg)'; if(lives>0){ flying=false; } updateUI(); },1100); } } requestAnimationFrame(animate); }
+game.addEventListener('mousedown',startCharge); game.addEventListener('mouseup',throwBottle); game.addEventListener('touchstart',startCharge,{passive:true}); game.addEventListener('touchend',throwBottle,{passive:true}); game.addEventListener('mouseleave',()=>{ if(charging && !flying && !gameOverShown){ if(timer){ clearInterval(timer); timer=null; } charging=false; power=0; setNeedle(50); } });
+</script>
+</body>
+</html>
