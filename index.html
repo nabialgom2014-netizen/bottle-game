@@ -3,252 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>👑 Royal Bottle Challenge - التحدي الملكي</title>
-<link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<meta property="og:title" content="👑 Royal Bottle Challenge - التحدي الملكي">
-<meta property="og:description" content="العب التحدي الملكي، 20 مستوى، هل تقدر تجيب القارورة في المنطقة الخضراء؟">
-<meta property="og:image" content="icon.png">
-<meta property="og:type" content="website">
-<meta name="theme-color" content="#0b0b2a">
+<title>Royal Bottle Challenge - التحدي الملكي</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;font-family:system-ui,Tahoma,sans-serif;background:#0b0b2a;color:#fff;overflow:hidden}
-#app{max-width:480px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;padding:10px}
-h1{font-size:28px;text-align:center;margin:8px 0 2px;color:#ffd700;text-shadow:0 0 20px #ffd700}
-.sub{text-align:center;color:#ccc;font-size:13px;margin-bottom:10px}
-.card{background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.35);border-radius:18px;padding:14px}
-input{width:100%;padding:13px;border-radius:12px;border:1px solid #ffd700;background:#111;font-size:16px;color:#fff;text-align:center;outline:none}
-button{cursor:pointer;border:none;border-radius:12px;padding:12px 14px;font-weight:800;font-size:15px}
-.btn-gold{width:100%;background:linear-gradient(180deg,#ffe27a,#d4a017);color:#1a1000;margin-top:10px}
-.btn-dark{background:#222;color:#fff;border:1px solid #555}
-.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
-.lv{aspect-ratio:1;border-radius:12px;font-size:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.lv small{font-size:10px}
-.lv.open{background:linear-gradient(180deg,#2b8a3e,#145a25);color:#fff;border:1px solid #7dff9a}
-.lv.current{background:linear-gradient(180deg,#ffd700,#b8860b);color:#000;box-shadow:0 0 18px #ffd700}
-.lv.locked{background:#2a2a3a;color:#888;border:1px solid #444}
-#msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:99;padding:20px}
-#msgBox{background:#1a1a35;border:2px solid #ffd700;border-radius:18px;padding:20px;text-align:center;max-width:340px;width:100%}
+body{margin:0;background:#0b0b2a;color:#fff;font-family:Arial,sans-serif;overflow:hidden;user-select:none}
+#app{max-width:480px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:linear-gradient(#1a1a4a,#0b0b2a)}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,.35)}
+header b{font-size:15px}
+#nameInput{width:100%;padding:12px;border-radius:12px;border:2px solid gold;font-size:16px;text-align:center}
+.btn{background:gold;color:#000;border:0;padding:12px 16px;border-radius:12px;font-weight:900;cursor:pointer;font-size:16px}
+.btn2{background:#222;color:#fff;border:1px solid #555;padding:10px;border-radius:10px;cursor:pointer}
+#levels{padding:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;overflow:auto}
+.lvl{background:#222;border:2px solid #444;border-radius:12px;padding:10px 0;text-align:center;cursor:pointer}
+.lvl.locked{opacity:.4}
+.lvl .stars{font-size:11px;color:gold;min-height:14px}
 #game{display:none;flex-direction:column;flex:1}
-.top{display:flex;gap:8px;align-items:center;justify-content:space-between}
-#canvasWrap{flex:1;background:linear-gradient(180deg,#1e3a5f,#0b0b2a);border-radius:18px;border:1px solid #ffd700;position:relative;overflow:hidden;margin:10px 0}
-canvas{width:100%;height:100%;display:block;touch-action:none}
-#controls{display:flex;gap:8px}
-#controls button{flex:1}
-.hint{font-size:12px;text-align:center;color:#ffdf7a;margin:6px 0}
-select{background:#111;color:#fff;border:1px solid #ffd700;padding:10px;border-radius:10px;width:100%}
+#topBar{display:flex;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,.4);font-size:13px}
+#scene{position:relative;flex:1;overflow:hidden;background:linear-gradient(#2b2b6b,#1a1a3a 60%,#3a2a1a 60%,#2a1e12)}
+#scene.wind{background:linear-gradient(#3a6a8a,#2a4a6a 60%,#3a2a1a 60%,#2a1e12)}
+#window{position:absolute;top:8%;left:8%;width:110px;height:90px;background:#87CEEB;border:5px solid #fff;display:none;border-radius:6px}
+#scene.wind #window{display:block}
+.leaf{position:absolute;font-size:20px;animation:leafFly 3s linear infinite}
+@keyframes leafFly{from{transform:translate(0,0) rotate(0)}to{transform:translate(-180px,80px) rotate(360deg)}}
+#table{position:absolute;bottom:18%;height:14px;background:#8B4513;border-radius:4px;border-top:3px solid #D2691E}
+#floor{position:absolute;bottom:0;left:0;right:0;height:18%;background:#1a120a;border-top:2px solid #333}
+#hand{position:absolute;bottom:18%;font-size:52px;z-index:5;transition:.15s}
+#bottle{position:absolute;bottom:calc(18% + 14px);width:34px;height:74px;z-index:6;transition:none;transform-origin:50% 50%;display:flex;align-items:center;justify-content:center;font-size:34px}
+#powerWrap{padding:10px 12px;background:rgba(0,0,0,.5)}
+#powerBar{height:18px;background:#333;border-radius:10px;overflow:hidden;border:1px solid gold}
+#powerFill{height:100%;width:0%;background:linear-gradient(90deg,green,yellow,red)}
+#msg{text-align:center;min-height:22px;font-weight:900;color:gold;padding:4px}
+#holdBtn{margin:10px 12px;padding:18px;background:gold;color:#000;border:0;border-radius:16px;font-size:19px;font-weight:900;touch-action:none}
+#holdBtn:active{background:#ffcc00}
+#starsRow{text-align:center;font-size:22px;color:gold}
+.reward{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:99}
+.reward>div{background:#1a1a4a;border:2px solid gold;border-radius:18px;padding:24px;text-align:center;max-width:320px}
 </style>
 </head>
 <body>
 <div id="app">
-  <!-- شاشة البداية -->
-  <div id="home">
-    <h1>👑 Royal Bottle<br>Challenge</h1>
-    <div class="sub">التحدي الملكي • 20 مستوى • كل لاعب له تقدمه الخاص</div>
-    <div class="card">
-      <div style="font-size:13px;margin-bottom:8px">👤 اسم اللاعب <span id="savedTag" style="color:#7dff9a"></span></div>
-      <input id="playerName" placeholder="اكتب اسمك هنا...">
-      <button class="btn-gold" onclick="startGame()">▶ ابدأ اللعب</button>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn-dark" style="flex:1" onclick="toggleMusic()">🎵 موسيقى: <span id="musicState">تشغيل</span></button>
-        <button class="btn-dark" style="flex:1" onclick="changePlayer()">🔄 لاعب جديد</button>
-      </div>
-      <div style="text-align:center;font-size:12px;margin-top:10px;color:#ffd700">اختر مستوى — المقفل 🔒 لازم تخلص اللي قبله</div>
-      <div class="levels" id="homeLevels"></div>
-      <div id="playerInfo" style="text-align:center;font-size:12px;margin-top:10px;color:#ccc"></div>
-    </div>
-  </div>
+<header><span>👑 Royal Bottle</span><span id="playerLabel"></span></header>
 
-  <!-- شاشة اللعبة -->
-  <div id="game">
-    <div class="top">
-      <button class="btn-dark" onclick="goHome()">🏠</button>
-      <div><b id="gPlayer">لاعب</b> • <span id="gLevel">المستوى 1</span></div>
-      <button class="btn-dark" onclick="toggleMusic()">🎵</button>
-    </div>
-    <div style="margin-top:10px"><select id="levelSelect" onchange="trySelectLevel(this.value)"></select></div>
-    <div class="hint" id="windHint">اسحب القارورة 🍾 وأفلتها في المنطقة الخضراء ✅</div>
-    <div id="canvasWrap"><canvas id="cv"></canvas></div>
-    <div id="controls">
-      <button class="btn-dark" onclick="prevLevel()">◀ السابق</button>
-      <button class="btn-gold" onclick="resetLevel()">🔄 إعادة</button>
-      <button class="btn-dark" onclick="nextLevel()">التالي ▶</button>
-    </div>
-  </div>
+<div id="home">
+<div style="padding:14px;text-align:center">
+<h2 style="margin:4px">🍾 التحدي الملكي<br><small style="font-size:13px;color:gold">Bottle Flip - 50 مستوى</small></h2>
+<p style="font-size:13px;color:#ccc">اضغط مطولاً لشحن القوة • اترك لتقلب القارورة • أنزلها واقفة على الطاولة</p>
+<input id="nameInput" placeholder="اكتب اسمك يا بطل...">
+<div style="margin-top:10px"><button class="btn" onclick="saveName()">ابدأ اللعب ▶️</button></div>
+<p id="skinInfo" style="font-size:13px;color:gold"></p>
+</div>
+<div id="levels"></div>
 </div>
 
-<div id="msg"><div id="msgBox"></div></div>
+<div id="game">
+<div id="topBar"><span id="lvlLabel"></span><span id="attemptLabel"></span><span id="windLabel"></span></div>
+<div id="scene">
+<div id="window">🪟</div>
+<div id="table"></div>
+<div id="floor"></div>
+<div id="hand" style="left:18%">✋</div>
+<div id="bottle">🍾</div>
+</div>
+<div id="msg">اضغط مطولاً على الزر لشحن القوة</div>
+<div id="starsRow"></div>
+<div id="powerWrap"><div>💪 القوة: <span id="powerTxt">0%</span></div><div id="powerBar"><div id="powerFill"></div></div></div>
+<button id="holdBtn">اضغط مطولاً واترك للقلبة 🤾</button>
+<div style="display:flex;gap:8px;padding:0 12px 12px"><button class="btn2" style="flex:1" onclick="backHome()">🏠 المستويات</button><button class="btn2" style="flex:1" onclick="retry()">🔄 إعادة</button><button class="btn2" style="flex:1" onclick="nextLevel()">التالي ▶️</button></div>
+</div>
+</div>
+
+<div class="reward" id="rewardBox"><div><h2>🎉 قارورة جديدة!</h2><p id="rewardTxt"></p><div id="rewardEmoji" style="font-size:60px"></div><br><button class="btn" onclick="closeReward()">رائع! أكمل</button></div></div>
 
 <script>
-let players = JSON.parse(localStorage.getItem('royal_bottle_players')||'{}');
-let lastPlayer = localStorage.getItem('royal_bottle_last')||'';
-let currentPlayer = '';
-let unlocked = 1;
-let currentLevel = 1;
-let selectedLevelBeforeLock = 1;
+let player = localStorage.getItem('royal_name')||'';
+let progress = JSON.parse(localStorage.getItem('royal_progress')||'{}');
+let unlocked = parseInt(localStorage.getItem('royal_unlocked')||'1');
+let skin = localStorage.getItem('royal_skin')||'🍾';
+let cur=1, attempts=0, power=0, charging=false, flying=false, interval=null;
+let skins={10:'💙',20:'❤️',30:'💜',40:'🩵',50:'👑'};
+let skinNames={10:'القارورة الزرقاء',20:'القارورة الحمراء',30:'القارورة البنفسجية',40:'القارورة السماوية',50:'القارورة الذهبية 👑'};
 
-const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
-let W,H,bottle, target, dragging=false, vx=0, vy=0, wind=0, started=false, attempts=0;
-
-function saveAll(){
-  players[currentPlayer]={unlocked:unlocked, at:Date.now()};
-  localStorage.setItem('royal_bottle_players',JSON.stringify(players));
-  localStorage.setItem('royal_bottle_last',currentPlayer);
-}
-function loadPlayer(name){
-  currentPlayer=name;
-  unlocked = players[name] ? players[name].unlocked : 1;
-  if(unlocked>20) unlocked=20;
-}
-function showMsg(title,txt,btn='حسناً',cb=null){
-  const m=document.getElementById('msg'); m.style.display='flex';
-  document.getElementById('msgBox').innerHTML=`<h2 style="color:#ffd700;margin:0">${title}</h2><p>${txt}</p><button class="btn-gold" style="width:100%" onclick="closeMsg()">${btn}</button>`;
-  window._msgCb=cb;
-}
-function closeMsg(){document.getElementById('msg').style.display='none'; if(window._msgCb) window._msgCb();}
+function saveName(){let v=document.getElementById('nameInput').value.trim(); if(v){player=v; localStorage.setItem('royal_name',v);} if(!player){alert('اكتب اسمك أولاً');return;} document.getElementById('playerLabel').textContent=player; renderLevels();}
 function renderLevels(){
-  const h=document.getElementById('homeLevels'); h.innerHTML='';
-  const s=document.getElementById('levelSelect'); s.innerHTML='';
-  for(let i=1;i<=20;i++){
-    let isLocked = i>unlocked;
-    let d=document.createElement('button');
-    d.className='lv '+(isLocked?'locked':(i===currentLevel?'current':'open'));
-    d.innerHTML=isLocked?`🔒<small>${i}</small>`:`${i}<small>${i===currentLevel?'الآن':i<unlocked?'✓':''}</small>`;
-    d.onclick=()=>{ if(isLocked){ playLockSound(); showMsg('🔒 مقفل!','لا تقدر تتخطى! لازم تخلص المستوى '+(i-1)+' أولاً، عشان ينفتح المستوى '+i); } else { currentLevel=i; renderLevels(); startGame(false); } };
-    h.appendChild(d);
-    let o=document.createElement('option'); o.value=i; o.textContent=isLocked?`🔒 المستوى ${i} - مقفل`:`المستوى ${i} ${i===currentLevel?'(الآن)':''}`; o.selected=(i===currentLevel); s.appendChild(o);
-  }
-  document.getElementById('playerInfo').textContent = currentPlayer? `👑 ${currentPlayer} — فتحت ${unlocked} من 20 مستوى` : '';
-  document.getElementById('gPlayer').textContent=currentPlayer||'لاعب';
-  document.getElementById('gLevel').textContent='المستوى '+currentLevel;
+ document.getElementById('playerLabel').textContent=player||'';
+ document.getElementById('nameInput').value=player||'';
+ document.getElementById('skinInfo').textContent='قارورتك الحالية: '+skin+'  •  وصلت للمستوى: '+unlocked;
+ let h=''; for(let i=1;i<=50;i++){let locked=i>unlocked; let st=progress[i]||0; let stars='⭐'.repeat(st); let label=i>=40?'🌪️ '+i:i; h+=`<div class="lvl ${locked?'locked':''}" onclick="startLevel(${i},${locked})"><div>${label}</div><div class="stars">${stars}</div><div style="font-size:10px">${locked?'🔒':'▶️'}</div></div>`;}
+ document.getElementById('levels').innerHTML=h;
 }
-function trySelectLevel(v){
-  let n=parseInt(v);
-  if(n>unlocked){ playLockSound(); showMsg('🔒 لا تقدر تتخطى!','لازم تخلص المستوى '+(n-1)+' أولاً، عشان ينفتح المستوى '+n); renderLevels(); return; }
-  currentLevel=n; renderLevels(); setupLevel();
+function startLevel(n,locked){if(locked){alert('🔒 هذا المستوى مقفل! أكمل المستوى '+unlocked+' أولاً');return;} cur=n; attempts=0; document.getElementById('home').style.display='none'; document.getElementById('game').style.display='flex'; setupLevel();}
+function backHome(){document.getElementById('home').style.display='block'; document.getElementById('game').style.display='none'; renderLevels();}
+function retry(){attempts=0; setupLevel();}
+function nextLevel(){if(cur<50) startLevel(cur+1,false); else backHome();}
+function setupLevel(){
+ let scene=document.getElementById('scene'); let isWind=cur>=40; scene.className=''; if(isWind) scene.id='scene'; scene.classList.toggle('wind',isWind);
+ document.getElementById('windLabel').textContent=isWind?'🌪️ رياح قوية!':'';
+ document.getElementById('lvlLabel').textContent='المستوى '+cur+' / 50';
+ document.getElementById('attemptLabel').textContent='محاولة: '+(attempts+1);
+ document.getElementById('msg').textContent=isWind?'🌪️ انتبه للرياح! النافذة مفتوحة':'اضغط مطولاً لشحن القوة';
+ document.getElementById('starsRow').textContent='';
+ // Table position by difficulty
+ let tableW = cur<=10?110 : cur<=20?95 : cur<=30?78 : cur<=39?65 : 60;
+ let tableLeft = cur<=10?62 : cur<=20?68 : cur<=30?74 : cur<=39?78 : 80;
+ // in % of scene width
+ let table=document.getElementById('table'); table.style.width=tableW+'px'; table.style.left=tableLeft+'%';
+ let hand=document.getElementById('hand'); hand.style.display='block'; hand.style.left='18%';
+ let b=document.getElementById('bottle'); b.textContent=skin; b.style.left='18%'; b.style.bottom='calc(18% + 14px)'; b.style.transform='rotate(0deg)';
+ // leaves
+ document.querySelectorAll('.leaf').forEach(e=>e.remove());
+ if(isWind){for(let i=0;i<4;i++){let l=document.createElement('div'); l.className='leaf'; l.textContent='🍂'; l.style.top=(10+Math.random()*40)+'%'; l.style.left=(70+Math.random()*20)+'%'; l.style.animationDelay=(i*0.7)+'s'; scene.appendChild(l);}}
+ power=0; updatePower();
 }
-function startGame(fromHome=true){
-  let inp=document.getElementById('playerName');
-  let name=(inp.value||'').trim();
-  if(fromHome){
-    if(!name && lastPlayer){ name=lastPlayer; }
-    if(!name){ showMsg('👤 اكتب اسمك','اكتب اسمك أولاً عشان نحفظ تقدمك'); return; }
-    loadPlayer(name); inp.value=name;
-  } else {
-    if(!currentPlayer){ currentPlayer=inp.value.trim()||lastPlayer||'لاعب'; loadPlayer(currentPlayer); }
-  }
-  saveAll();
-  document.getElementById('home').style.display='none';
-  document.getElementById('game').style.display='flex';
-  renderLevels(); setupLevel(); startMusic();
-}
-function changePlayer(){ document.getElementById('playerName').value=''; document.getElementById('savedTag').textContent=''; lastPlayer=''; localStorage.removeItem('royal_bottle_last'); document.getElementById('playerName').focus(); }
-function goHome(){ document.getElementById('home').style.display='block'; document.getElementById('game').style.display='none'; renderLevels(); }
-function prevLevel(){ if(currentLevel>1){ currentLevel--; renderLevels(); setupLevel(); } }
-function nextLevel(){ if(currentLevel<unlocked){ currentLevel++; renderLevels(); setupLevel(); } else { showMsg('🔒 مقفل!','خلص المستوى الحالي أولاً عشان ينفتح اللي بعده'); } }
-function resetLevel(){ setupLevel(); }
+function updatePower(){document.getElementById('powerFill').style.width=power+'%'; document.getElementById('powerTxt').textContent=Math.round(power)+'%';}
+let btn=document.getElementById('holdBtn');
+function startCharge(e){if(flying) return; e.preventDefault(); charging=true; power=0; interval=setInterval(()=>{power+=1.8; if(power>=100) power=100; updatePower();},18);}
+function endCharge(e){if(!charging) return; e.preventDefault(); charging=false; clearInterval(interval); doFlip();}
+btn.addEventListener('touchstart',startCharge,{passive:false});
+btn.addEventListener('touchend',endCharge,{passive:false});
+btn.addEventListener('mousedown',startCharge);
+btn.addEventListener('mouseup',endCharge);
+btn.addEventListener('mouseleave',()=>{if(charging) endCharge({preventDefault(){}})});
 
-function resize(){ const r=document.getElementById('canvasWrap').getBoundingClientRect(); W=cv.width=r.width*2; H=cv.height=r.height*2; cv.style.width=r.width+'px'; cv.style.height=r.height+'px'; }
-window.addEventListener('resize',()=>{ resize(); setupLevel(true); });
-
-function setupLevel(keep=false){
-  resize();
-  let diff = currentLevel<=5?0 : currentLevel<=10?1 : 2;
-  wind = diff===0?0 : diff===1?(Math.random()*0.6-0.3) : (Math.random()*1.4-0.7);
-  document.getElementById('windHint').textContent = diff===0? 'اسحب القارورة 🍾 وأفلتها في المنطقة الخضراء ✅' : diff===1? `🌬️ رياح خفيفة! انتبه للرياح • المستوى ${currentLevel}` : `🌪️ رياح قوية جداً! • المستوى ${currentLevel} - ركز`;
-  bottle={x:W*0.5,y:H-90,r:28};
-  target={x:W*0.5 + (Math.random()*W*0.3-W*0.15), y:90, w:120, h:50};
-  vx=0; vy=0; started=true; draw();
+function doFlip(){
+ if(power<15){document.getElementById('msg').textContent='⚠️ قوة ضعيفة جداً! اضغط أطول'; return;}
+ flying=true; attempts++;
+ document.getElementById('hand').style.display='none';
+ let b=document.getElementById('bottle'); let scene=document.getElementById('scene');
+ let startX=18; let isWind=cur>=40;
+ // target table left % and width
+ let table=document.getElementById('table'); let tableLeftPct=parseFloat(table.style.left); let tableWpx=parseFloat(table.style.width);
+ let sceneW=scene.clientWidth; let tableCenterPx = (tableLeftPct/100)*sceneW + tableWpx/2;
+ let startPx = (startX/100)*sceneW;
+ // power maps to distance, ideal power depends on level
+ let ideal = cur<=10?55 : cur<=20?62 : cur<=30?70 : cur<=39?78 : 82;
+ let diff = Math.abs(power-ideal);
+ let landX = startPx + (power/100)* (tableCenterPx - startPx) * 1.35 + (Math.random()*30-15);
+ if(isWind) landX += -40 - Math.random()*40; // wind pushes left
+ let duration = 900 + diff*4;
+ let startTime=performance.now();
+ let rot=0;
+ function anim(now){
+   let t=(now-startTime)/duration; if(t>1) t=1;
+   let x = startPx + (landX-startPx)*t;
+   let y = Math.sin(t*Math.PI)* (120 + power*1.2);
+   b.style.left=(x/sceneW*100)+'%';
+   b.style.bottom=`calc(18% + 14px + ${y}px)`;
+   rot+= 14; b.style.transform=`rotate(${rot}deg)`;
+   if(t<1) requestAnimationFrame(anim); else finishLand(landX, tableCenterPx, tableWpx/2);
+ }
+ requestAnimationFrame(anim);
 }
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  // هدف
-  ctx.fillStyle='#145a25'; ctx.fillRect(target.x-target.w/2, target.y-target.h/2, target.w, target.h);
-  ctx.strokeStyle='#7dff9a'; ctx.lineWidth=4; ctx.strokeRect(target.x-target.w/2, target.y-target.h/2, target.w, target.h);
-  ctx.fillStyle='#fff'; ctx.font='bold 28px system-ui'; ctx.textAlign='center'; ctx.fillText('🎯', target.x, target.y+10);
-  // رياح
-  if(Math.abs(wind)>0.1){ ctx.fillStyle='rgba(255,255,255,.6)'; ctx.font='22px system-ui'; ctx.fillText(wind>0?'🌬️ →→→':'←←← 🌬️', W/2, 50); }
-  // قارورة
-  ctx.save(); ctx.translate(bottle.x,bottle.y);
-  ctx.font='64px system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🍾',0,0);
-  ctx.restore();
-  ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='20px system-ui'; ctx.textAlign='left'; ctx.fillText('المستوى '+currentLevel+' / 20',14,28);
+function finishLand(landX, center, halfW){
+ let b=document.getElementById('bottle');
+ // final rotation near upright: we check rot modulo 360, success if within tolerance and inside table
+ let onTable = Math.abs(landX-center) < halfW;
+ // rotation success: if power close to ideal, bottle lands upright, else falls
+ let ideal = cur<=10?55 : cur<=20?62 : cur<=30?70 : cur<=39?78 : 82;
+ let diff = Math.abs(power-ideal);
+ let upright = diff < 18;
+ if(onTable && upright){
+   b.style.transform='rotate(0deg)'; b.style.bottom='calc(18% + 14px)'; b.style.left=((center-17)/document.getElementById('scene').clientWidth*100)+'%';
+   let stars = attempts===1?3 : attempts===2?2 : 1;
+   progress[cur]=Math.max(progress[cur]||0, stars); localStorage.setItem('royal_progress',JSON.stringify(progress));
+   document.getElementById('msg').textContent='🎉 أحسنت يا '+player+'! فزت!';
+   document.getElementById('starsRow').textContent='⭐'.repeat(stars);
+   if(cur===unlocked && cur<50){unlocked++; localStorage.setItem('royal_unlocked',unlocked);}
+   if(skins[cur] && skin!==skins[cur]){ // reward if first time reaching this milestone
+     // only show if newly unlocked
+     if(!localStorage.getItem('reward_'+cur)){ localStorage.setItem('reward_'+cur,'1'); skin=skins[cur]; localStorage.setItem('royal_skin',skin); setTimeout(()=>showReward(cur),600); }
+   }
+   setTimeout(()=>{ if(cur<50 && confirm('🎉 فزت! تنتقل للمستوى '+(cur+1)+'؟')) startLevel(cur+1,false); },900);
+ } else {
+   b.style.transform='rotate(90deg)'; b.style.bottom='calc(18% + 2px)';
+   document.getElementById('msg').textContent= onTable ? '😅 وصلت للطاولة بس القارورة طاحت! جرب قوة أدق' : '💥 بعيدة عن الطاولة! اضبط القوة';
+   document.getElementById('attemptLabel').textContent='محاولة: '+(attempts+1);
+ }
+ flying=false;
 }
-function pos(e){ const r=cv.getBoundingClientRect(); let t=e.touches?e.touches[0]:e; return {x:(t.clientX-r.left)*2, y:(t.clientY-r.top)*2}; }
-cv.addEventListener('pointerdown',e=>{ let p=pos(e); if(Math.hypot(p.x-bottle.x,p.y-bottle.y)<90){ dragging=true; } });
-cv.addEventListener('pointermove',e=>{ if(!dragging) return; let p=pos(e); bottle.x=p.x; bottle.y=p.y; draw(); });
-cv.addEventListener('pointerup',e=>{ if(!dragging) return; dragging=false; let p=pos(e); vx=(p.x-bottle.x)*0.02; vy=-6-Math.random()*2; animate(); });
-function animate(){
-  if(dragging) return;
-  vy+=0.35; vx+=wind*0.08;
-  bottle.x+=vx*2; bottle.y+=vy*2;
-  if(bottle.y>H-40){ bottle.y=H-40; vy*=-0.4; vx*=0.7; if(Math.abs(vy)<1){ checkWin(); return; } }
-  if(bottle.x<20){ bottle.x=20; vx*=-0.5 } if(bottle.x>W-20){ bottle.x=W-20; vx*=-0.5 }
-  draw();
-  if(bottle.y < target.y+80){ setTimeout(()=>{ if(!dragging) requestAnimationFrame(animate); },16); } else { requestAnimationFrame(animate); }
-  // فوز إذا داخل الهدف وسرعة قليلة
-  if(Math.abs(bottle.x-target.x)<target.w/2 && Math.abs(bottle.y-target.y)<target.h/2 && Math.abs(vy)<4){
-    winLevel(); return;
-  }
-}
-function checkWin(){
-  if(Math.abs(bottle.x-target.x)<target.w/2 && bottle.y<200){ winLevel(); } else { showMsg('😅 قريب!','القارورة ما وصلت للمنطقة الخضراء، حاول مرة ثانية','حاول مجدداً',()=>setupLevel()); }
-}
-function winLevel(){
-  if(currentLevel>=unlocked && currentLevel<20){
-    unlocked=currentLevel+1;
-    saveAll();
-    playUnlockSound();
-    showMsg('🎉 أحسنت يا بطل!','خلصت المستوى '+currentLevel+'<br>🔓 <b>انكسر قفل المستوى '+unlocked+'!</b> صار مفتوح الآن','العب المستوى التالي',()=>{ currentLevel=unlocked; renderLevels(); setupLevel(); });
-  } else if(currentLevel===20){
-    playUnlockSound();
-    showMsg('👑 أنت الملك!','خلصت كل الـ 20 مستوى! أنت أسطورة Royal Bottle Challenge','العب من جديد',()=>{ currentLevel=1; renderLevels(); setupLevel(); });
-  } else {
-    showMsg('✅ ممتاز!','خلصت المستوى '+currentLevel,'التالي',()=>{ currentLevel++; renderLevels(); setupLevel(); });
-  }
-  renderLevels();
-}
-
-// ===== موسيقى محسنة - بيانو + باس + إيقاع، تتغير حسب المستوى =====
-let audioCtx=null, musicOn=true, musicTimer=null, noteIdx=0;
-const scales={
-  calm:[261.63,329.63,392.00,440.00,523.25,587.33],
-  energy:[261.63,311.13,392.00,466.16,523.25,622.25],
-  epic:[196.00,261.63,329.63,392.00,440.00,523.25,659.25]
-};
-function playTone(freq,dur,type='sine',vol=0.15,when=0){
-  if(!audioCtx||!musicOn) return;
-  let t=audioCtx.currentTime+when;
-  let o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type=type; o.frequency.value=freq;
-  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+dur+0.05);
-}
-function playLockSound(){ playTone(180,0.15,'square',0.12); setTimeout(()=>playTone(120,0.2,'square',0.12),120); }
-function playUnlockSound(){ [523,659,784,1046].forEach((f,i)=>playTone(f,0.35,'triangle',0.18,i*0.12)); }
-function startMusic(){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==='suspended') audioCtx.resume();
-  if(musicTimer) return;
-  musicTimer=setInterval(()=>{
-    if(!musicOn) return;
-    let mode = currentLevel<=5?'calm':currentLevel<=10?'energy':'epic';
-    let scale=scales[mode];
-    let tempo = mode==='calm'?500:mode==='energy'?340:280;
-    let n=scale[noteIdx%scale.length];
-    playTone(n,0.45,'triangle',0.12);
-    if(noteIdx%2===0) playTone(n/2,0.5,'sine',0.10);
-    if(noteIdx%4===0) playTone(130,0.15,'sine',0.08);
-    noteIdx++;
-  }, 420);
-}
-function toggleMusic(){ musicOn=!musicOn; document.getElementById('musicState').textContent=musicOn?'تشغيل':'إيقاف'; if(musicOn) startMusic(); }
-
-// بداية
-if(lastPlayer){ document.getElementById('playerName').value=lastPlayer; document.getElementById('savedTag').textContent='(محفوظ: '+lastPlayer+')'; loadPlayer(lastPlayer); }
-else { loadPlayer(''); unlocked=1; }
+function showReward(lvl){document.getElementById('rewardTxt').textContent='حصلت على '+skinNames[lvl]+'!'; document.getElementById('rewardEmoji').textContent=skins[lvl]; document.getElementById('rewardBox').style.display='flex';}
+function closeReward(){document.getElementById('rewardBox').style.display='none';}
 renderLevels();
+if(player) document.getElementById('playerLabel').textContent=player;
 </script>
 </body>
 </html>
